@@ -18,9 +18,10 @@
         },
 
         methods: {
-            createMap: function() {
-                var map;
 
+            createMap: function() {
+
+                var map;
                 map = new google.maps.Map(document.getElementById('map'), {
                     center: {
                         lat: 35,
@@ -29,9 +30,11 @@
                     zoom: 4
                 });
                 this.map = map;
+
             },
 
             getMapData: function() {
+
                 this.$http({
                     url: 'https://data.nasa.gov/resource/gh4g-9sfh.json',
                     method: 'GET'
@@ -41,6 +44,7 @@
                 }, function(response) {
                     console.log("ERROR: " + response);
                 });
+
             },
 
             createMarkers: function(data) {
@@ -60,20 +64,21 @@
                     var infowindow = new google.maps.InfoWindow();
                     var infoWindowContent = '<h2>' + meteorite.name + '</h2>' + '<h4>' + meteorite.fall + ': ' + date + '</h4>' + '<h5>' + 'Mass: ' + meteorite.mass + ' grams' + '</h5>';
 
-
                     this.bindInfoWindow(marker, this.map, infowindow, infoWindowContent)
                 }
+
             },
-            bindInfoWindow: function(marker, map, infowindow, content){
-              infowindow.setContent(content);
-              marker.addListener('click', function() {
-                infowindow.open(map, marker);
-              });
+
+            bindInfoWindow: function(marker, map, infowindow, content) {
+
+                infowindow.setContent(content);
+                marker.addListener('click', function() {
+                    infowindow.open(map, marker);
+                });
+
             }
-
-        }
-
-    }
+        } //end methods
+    } //end export default
 </script>
 
 <style>
