@@ -8,7 +8,6 @@
 </template>
 
 <script>
-
     var Vue = require('vue');
     Vue.use(require('vue-resource'));
 
@@ -24,10 +23,10 @@
 
                 map = new google.maps.Map(document.getElementById('map'), {
                     center: {
-                        lat: 0,
-                        lng: 45
+                        lat: 35,
+                        lng: -98
                     },
-                    zoom: 2
+                    zoom: 4
                 });
                 this.map = map;
             },
@@ -45,15 +44,31 @@
             },
 
             createMarkers: function(data) {
-              console.log(this.map);
+
                 for (let i = 0; i < data.data.length; i++) {
                     var meteorite = data.data[i];
-                    const marker = new google.maps.Marker({
+                    // console.log(meteorite);
+                    var marker = new google.maps.Marker({
                         position: new google.maps.LatLng(parseFloat(meteorite.reclat), parseFloat(meteorite.reclong)),
                         map: this.map,
-                        title: meteorite.name
+                        title: meteorite.name,
                     });
+
+                    var dateObject = new Date(Date.parse(meteorite.year));
+                    var date = dateObject.toDateString();
+
+                    var infowindow = new google.maps.InfoWindow();
+                    var infoWindowContent = '<h2>' + meteorite.name + '</h2>' + '<h4>' + meteorite.fall + ': ' + date + '</h4>' + '<h5>' + 'Mass: ' + meteorite.mass + ' grams' + '</h5>';
+
+
+                    this.bindInfoWindow(marker, this.map, infowindow, infoWindowContent)
                 }
+            },
+            bindInfoWindow: function(marker, map, infowindow, content){
+              infowindow.setContent(content);
+              marker.addListener('click', function() {
+                infowindow.open(map, marker);
+              });
             }
 
         }
