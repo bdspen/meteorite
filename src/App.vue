@@ -27,7 +27,8 @@
                         lat: 35,
                         lng: -98
                     },
-                    zoom: 4
+                    zoom: 4,
+                    mapTypeId: google.maps.MapTypeId.SATELLITE            
                 });
                 this.map = map;
 
@@ -55,7 +56,7 @@
                     var marker = new google.maps.Marker({
                         position: new google.maps.LatLng(parseFloat(meteorite.reclat), parseFloat(meteorite.reclong)),
                         map: this.map,
-                        title: meteorite.name,
+                        title: meteorite.name
                     });
 
                     var dateObject = new Date(Date.parse(meteorite.year));
@@ -72,8 +73,17 @@
             bindInfoWindow: function(marker, map, infowindow, content) {
 
                 infowindow.setContent(content);
+                infowindow.opened = false;
                 marker.addListener('click', function() {
+                  if (infowindow.opened === true){
+                    infowindow.close();
+                    infowindow.opened = false;
+                  } else {
+                    infowindow.opened = true;
+                    map.setZoom(8);
+                    map.panTo(marker.getPosition());
                     infowindow.open(map, marker);
+                  }
                 });
 
             }
