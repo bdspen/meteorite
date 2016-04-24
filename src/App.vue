@@ -2,7 +2,12 @@
     <div id="app">
         <h1>Meteorite Impacts Worldwide</h1>
         <div class="row">
-            <div id="map" class="ten columns"></div>
+            <div id="map" class="nine columns"></div>
+            <div class="three columns">
+              <ul>
+                <li>{{mapData}}</li>
+              </ul>
+            </div>
         </div>
     </div>
 </template>
@@ -28,7 +33,7 @@
                         lng: -98
                     },
                     zoom: 4,
-                    mapTypeId: google.maps.MapTypeId.SATELLITE            
+                    mapTypeId: google.maps.MapTypeId.SATELLITE
                 });
                 this.map = map;
 
@@ -52,7 +57,6 @@
 
                 for (let i = 0; i < data.data.length; i++) {
                     var meteorite = data.data[i];
-                    // console.log(meteorite);
                     var marker = new google.maps.Marker({
                         position: new google.maps.LatLng(parseFloat(meteorite.reclat), parseFloat(meteorite.reclong)),
                         map: this.map,
@@ -87,7 +91,12 @@
                 });
 
             }
-        } //end methods
+        }, //end methods
+        computed: {
+          mapData: function(){
+            return this.mapData;
+          }
+        }
     } //end export default
 </script>
 
@@ -95,6 +104,5 @@
     #map {
         max-width: 1800px;
         height: 800px;
-        width: 100%;
     }
 </style>
