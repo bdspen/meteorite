@@ -1,15 +1,24 @@
 <template>
     <div id="app">
+      <div class="container">
+
         <h1>Meteorite Impacts Worldwide</h1>
         <div class="row">
             <div id="map" class="nine columns"></div>
             <div class="three columns">
-              <ul>
-                <li>{{mapData}}</li>
+              <ul  id="meteorite-ul">
+                <li v-for="item in meteorites" class="list-item" v-on:click="goTo(item)">
+                  <h4>{{item.name}}</h4>
+                  <ul>
+                    <li>Mass: {{item.mass}}</li>
+                    <li>Year: {{item.year}}</li>
+                  </ul>
+                </li>
               </ul>
             </div>
         </div>
     </div>
+  </div>
 </template>
 
 <script>
@@ -18,11 +27,20 @@
 
     export default {
 
+        data: function(){
+          return {
+            meteorites: {}
+          }
+        },
+
         ready: function() {
-            this.getMapData();
+            this.initialize();
         },
 
         methods: {
+            initialize: function(){
+                this.getMeteoriteData();
+            },
 
             createMap: function() {
 
@@ -39,14 +57,13 @@
 
             },
 
-            getMapData: function() {
+            getMeteoriteData: function() {
 
                 this.$http({
                     url: 'https://data.nasa.gov/resource/gh4g-9sfh.json',
                     method: 'GET'
                 }).then(function(response) {
-                    this.createMap();
-                    this.createMarkers(response);
+                    this.meteoriteData = response;
                 }, function(response) {
                     console.log("ERROR: " + response);
                 });
@@ -90,11 +107,20 @@
                   }
                 });
 
+            },
+
+            goTo: function(){
+              //to-do create function that brings user to map marker on list item click
             }
         }, //end methods
         computed: {
-          mapData: function(){
-            return this.mapData;
+          meteoriteData: {
+            set: function(newValue){
+              this.meteorites = newValue.data;
+              console.log(this.meteorites);
+              this.createMap();
+              this.createMarkers(newValue);
+            }
           }
         }
     } //end export default
@@ -104,5 +130,22 @@
     #map {
         max-width: 1800px;
         height: 800px;
+    }
+    #meteorite-ul{
+        height: 800px;
+        overflow: scroll;
+    }
+    .list-item{
+      border-top: 1px solid black;
+      margin-right: 10px;
+      margin-left: 10px;
+      cursor: pointer;
+    }
+    .list-item :hover{
+      transition: opacity .75s ease;
+      opacity: .4
+    }
+    li{
+      list-style: none
     }
 </style>
