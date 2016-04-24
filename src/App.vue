@@ -8,6 +8,7 @@
 </template>
 
 <script>
+
     var Vue = require('vue');
     Vue.use(require('vue-resource'));
 
@@ -15,8 +16,8 @@
 
         ready: function() {
             this.getMapData();
-            this.createMap();
         },
+
         methods: {
             createMap: function() {
                 var map;
@@ -28,31 +29,35 @@
                     },
                     zoom: 2
                 });
+                this.map = map;
             },
+
             getMapData: function() {
                 this.$http({
                     url: 'https://data.nasa.gov/resource/gh4g-9sfh.json',
                     method: 'GET'
                 }).then(function(response) {
-                      console.log(response);
-                      this.mapData = response;
-                      this.createMarkers(this.mapData);
+                    this.createMap();
+                    this.createMarkers(response);
                 }, function(response) {
                     console.log("ERROR: " + response);
                 });
             },
+
             createMarkers: function(data) {
-              for (let i = 0; i < data.data.length; i++) {
-                var meteorite = data.data[i];
-                const marker = new google.maps.Marker({
-                  position: new google.maps.LatLng(parseFloat(meteorite.reclat), parseFloat(meteorite.reclong)),
-                  map: map,
-                  title: meteorite.name
-                });
-                data.data[i]
-              }
+              console.log(this.map);
+                for (let i = 0; i < data.data.length; i++) {
+                    var meteorite = data.data[i];
+                    const marker = new google.maps.Marker({
+                        position: new google.maps.LatLng(parseFloat(meteorite.reclat), parseFloat(meteorite.reclong)),
+                        map: this.map,
+                        title: meteorite.name
+                    });
+                }
             }
+
         }
+
     }
 </script>
 
