@@ -1,23 +1,24 @@
 <template>
     <div id="app">
-      <div class="container">
-
-        <h1>Meteorite Impacts Worldwide</h1>
-        <div class="row">
-            <div id="map" class="nine columns"></div>
-            <div class="three columns">
-              <ul  id="meteorite-ul">
-                <li v-for="item in meteorites" class="list-item" v-on:click="goTo(item)">
-                  <h4>{{item.name}}</h4>
-                  <ul>
-                    <li>Mass: {{item.mass}}</li>
-                    <li>Year: {{item.year}}</li>
-                  </ul>
-                </li>
-              </ul>
-            </div>
+      <div class="row">
+        <div class="nine columns">
+          <h1>Meteorite Impacts Worldwide</h1>
         </div>
-    </div>
+      </div>
+      <div class="row">
+          <div id="map" class="nine columns"></div>
+          <div class="three columns">
+            <ul  id="meteorite-ul">
+              <li v-for="item in meteorites" track-by="$index" class="list-item" v-on:click="goTo($index)">
+                <h4 class="list-item-header">{{item.name}}</h4>
+                <ul class="list-item-ul">
+                  <li>Mass: {{item.mass}}</li>
+                  <li>Year: {{item.year}}</li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+      </div>
   </div>
 </template>
 
@@ -29,7 +30,8 @@
 
         data: function(){
           return {
-            meteorites: {}
+            meteorites: {},
+            markers: []
           }
         },
 
@@ -84,9 +86,10 @@
                     var date = dateObject.toDateString();
 
                     var infowindow = new google.maps.InfoWindow();
-                    var infoWindowContent = '<h2>' + meteorite.name + '</h2>' + '<h4>' + meteorite.fall + ': ' + date + '</h4>' + '<h5>' + 'Mass: ' + meteorite.mass + ' grams' + '</h5>';
+                    var infoWindowContent = '<h2 class="info-text">' + meteorite.name + '</h2>' + '<h4 class="info-text">' + meteorite.fall + ': ' + date + '</h4>' + '<h5 class="info-text">' + 'Mass: ' + meteorite.mass + ' grams' + '</h5>';
 
-                    this.bindInfoWindow(marker, this.map, infowindow, infoWindowContent)
+                    this.bindInfoWindow(marker, this.map, infowindow, infoWindowContent);
+                    this.markers.push(marker);
                 }
 
             },
@@ -109,15 +112,14 @@
 
             },
 
-            goTo: function(){
-              //to-do create function that brings user to map marker on list item click
+            goTo: function(i){
+              new google.maps.event.trigger( this.markers[i], 'click' );
             }
         }, //end methods
         computed: {
           meteoriteData: {
             set: function(newValue){
               this.meteorites = newValue.data;
-              console.log(this.meteorites);
               this.createMap();
               this.createMarkers(newValue);
             }
@@ -135,6 +137,13 @@
         height: 800px;
         overflow: scroll;
     }
+    .list-item-header{
+      margin-bottom: 0px;
+    }
+    .list-item-ul{
+      margin-top: 0px;
+      margin-bottom: 0px;
+    }
     .list-item{
       border-top: 1px solid black;
       margin-right: 10px;
@@ -144,6 +153,9 @@
     .list-item :hover{
       transition: opacity .75s ease;
       opacity: .4
+    }
+    .info-text{
+      margin: 0px;
     }
     li{
       list-style: none
