@@ -4,6 +4,14 @@
         <div class="nine columns">
           <h1>Meteorite Impacts Worldwide</h1>
         </div>
+        <div class="three columns">
+          <label>Sort by:</label>
+          <select class="u-full-width">
+            <option>Name</option>
+            <option>Mass</option>
+            <option>Year</option>
+          </select>
+        </div>
       </div>
       <div class="row">
           <div id="map" class="nine columns"></div>
